@@ -11,11 +11,24 @@ class Matrix {
             col: '',
             col_rev: ''
         }
-        this.row_str = '';
-        this.row_str_rev = '';
-        this.col_str = '';
-        this.col_str_rev = '';
         
+        this.coord = {
+            row: [],
+            row_rev: [],
+            col: [],
+            col_rev: []
+        }
+        
+    }
+
+    generateFromImg(lines) {
+        this.matrix = [];
+
+        for(let line of lines) {
+            let r = line.split('');
+            this.matrix.push(r);
+        }
+        this.generateStringReps();
     }
 
     generate(alphabet) {
@@ -36,11 +49,18 @@ class Matrix {
         this.string_reps.row_rev = '';
         this.string_reps.col_rev = '';
 
+        this.coord.row = [];
+        this.coord.col = [];
+        this.coord.row_rev = [];
+        this.coord.col_rev = [];
+
         // Row str
         for(let row = 0; row < this.height; row++) {
             for(let col = 0; col < this.width; col++) {
                 this.string_reps.row += this.matrix[row][col];
+                this.coord.row.push({row: row, col: col});
                 if(col == this.width - 1) {
+                    this.coord.row.push({row: -1, col: -1});
                     this.string_reps.row += this.separator;
                 }
             }
@@ -50,7 +70,9 @@ class Matrix {
         for(let col = 0; col < this.width; col++) {
             for(let row = 0; row < this.height; row++) {
                 this.string_reps.col += this.matrix[row][col];
+                this.coord.col.push({row: row, col: col});
                 if(row == this.height - 1) {
+                    this.coord.col.push({row: -1, col: -1});
                     this.string_reps.col += this.separator;
                 }
             }
@@ -58,9 +80,11 @@ class Matrix {
 
         // Row str reverse
         this.string_reps.row_rev = this.string_reps.row.split("").reverse().join("");
+        this.coord.row_rev = this.coord.row.slice().reverse();
 
         // Col str reverse
         this.string_reps.col_rev = this.string_reps.col.split("").reverse().join("");
+        this.coord.col_rev = this.coord.col.slice().reverse();
     }
 
     findWords(dict) {
@@ -77,7 +101,16 @@ class Matrix {
 
                         if(ret == 1) {
                             // Word found
-                            words.push(cur_word);
+                            
+                            if (key == 'row') {
+                                words.push({word: cur_word, loc: {start: this.coord.row[i], end: this.coord.row[end_ind]} });
+                            } else if (key == 'row_rev') {
+                                words.push({word: cur_word, loc: {start: this.coord.row_rev[i], end: this.coord.row_rev[end_ind]} });
+                            } else if (key == 'col') {
+                                words.push({word: cur_word, loc: {start: this.coord.col[i], end: this.coord.col[end_ind]} });
+                            } else if (key == 'col_rev') {
+                                words.push({word: cur_word, loc: {start: this.coord.col_rev[i], end: this.coord.col_rev[end_ind]} });
+                            }
                             end_ind += 1
                         }
                         else if(ret == 0) {
