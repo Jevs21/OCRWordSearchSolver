@@ -34,7 +34,7 @@ app.get('/index.js',function(req,res){
  * GENERATE A MATRIX
  */
 app.get('/generateMatrix', (req, res) => {
-    let puzzle = new Matrix(200, 200);
+    let puzzle = new Matrix(20, 20);
     
     puzzle.generate(alph);
 
@@ -70,6 +70,8 @@ app.get('/generateMatrixFromImg', (req, res) => {
     console.log(puzzle.toString());
 
     search_res = puzzle.findWords(dict);
+
+    console.log(search_res);
 
     res.status(200).send({'matrix': puzzle.matrix, 'results': search_res});
 })

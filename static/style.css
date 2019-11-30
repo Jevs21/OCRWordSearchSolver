@@ -1,9 +1,14 @@
+
 #title_container {
     text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .button_container {
     text-align: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .letter {
@@ -13,3 +18,4 @@
     margin-top: 2px;
     margin-bottom: 2px;
 }
+

@@ -12,7 +12,10 @@ $(document).ready(()=> {
         })
     });
 
-    // processImage();
+    $("#upload_button").click(() => {
+        processImage();
+    });
+
 });
 
 
@@ -24,8 +27,13 @@ function createResults(res, width, height) {
     </div>`;
 
     string += `<div class='row'><p>`
+    let arr = [];
     for(let r of res) {
-        string += `${r.word}, `;
+        arr.push(r.word);
+    }
+    arr.sort();
+    for(let r of arr) {
+        string += `<span class='word>${r}</span>, `;
     }
     string += `</p></div>`;
     $('#results_container').html(string);
@@ -39,7 +47,7 @@ function createResults(res, width, height) {
         { backgroundColor : 'rgb(255, 162, 148)' }, // red
         { backgroundColor : 'rgb(255, 199, 253)' }, // pink
         { backgroundColor : 'rgb(255, 195, 143)' }, // orange
-        { backgroundColor : 'rgb(191, 255, 251)' }, // cyan
+        { backgroundColor : 'rgb(191, 255, 251)' } // cyan
     ];
     for(let r of res) {
         let color_ind = Math.floor(Math.random() * found_word_class.length); 
@@ -96,8 +104,8 @@ function processImage() {
     var uriBase = endpoint + "vision/v2.1/read/core/asyncBatchAnalyze";
 
     // Display the image.
-    //var sourceImageUrl = "http://www.jordanevans.me/JEVS/WordSearchImages/test2.jpg";
-    var sourceImageUrl = "https://global.oup.com/us/companion.websites/9780199997961/images/ch07.jpg";
+    var sourceImageUrl = "http://www.jordanevans.me/JEVS/WordSearchImages/test3.png";
+    //var sourceImageUrl = "https://global.oup.com/us/companion.websites/9780199997961/images/ch07.jpg";
 
     // This operation requires two REST API calls. One to submit the image
     // for processing, the other to retrieve the text found in the image.
@@ -153,7 +161,7 @@ function processImage() {
                 let formatted_res = []
 
                 for (let line of unformatted_res.lines) {
-                    formatted_res.push(line.text.replace(/\s/g, ''));
+                    formatted_res.push(line.text.replace(/\s/g, '').toLowerCase());
                 }
 
                 $.ajax({
@@ -179,7 +187,7 @@ function processImage() {
                         jQuery.parseJSON(jqXHR.responseText).error.message;
                 alert(errorString);
             });
-        }, 10000);
+        }, 5000);
     })
 
     .fail(function(jqXHR, textStatus, errorThrown) {
